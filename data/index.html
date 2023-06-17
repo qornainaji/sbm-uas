@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ESP IOT DASHBOARD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="icon" type="image/png" href="favicon.png"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="http://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/all/gauge.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-blue-950 text-center text-white">
+    <div class="text-center py-[50px] bg-indigo-500 text-white rounded-b-3xl">
+      <h1 class="text-4xl font-bold">HUMIDITY AND POTENSIOMETER READER</h1>
+      <h2>HUMIDITY AND POTENSIOMETER READER</h2>
+    </div>
+    <div class="py-[100px] font-bold text-2xl justify-center flex">
+      <div class="flex flex-row space-x-[100px]">
+        <div class="bg-blue-100/20 p-[20px] rounded-2xl">
+          <p class="">Temperature</p>
+          <canvas id="gauge-temperature"></canvas>
+        </div>
+        <div class="bg-blue-100/20 p-[20px] rounded-2xl">
+          <p class="">Humidity</p>
+          <canvas id="gauge-humidity"></canvas>
+        </div>
+        <div class="bg-blue-100/20 p-[20px] rounded-2xl">
+          <p class="">Potentiometer</p>
+          <canvas id="gauge-pot"></canvas>
+        </div>
+        <div class="bg-blue-100/20 p-[20px] rounded-2xl">
+          <p class="">Tilt Meter</p>
+          <canvas id="gauge-tilt"></canvas>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
