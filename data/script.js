@@ -107,7 +107,6 @@ var gaugePot = new RadialGauge({
   colorValueBoxRect: "#049faa",
   colorValueBoxRectEnd: "#049faa",
   colorValueBoxBackground: "#f1fbfc",
-  valueInt: 2,
   majorTicks: [
       "0",
       "1000",
@@ -136,7 +135,7 @@ var gaugePot = new RadialGauge({
   colorNeedleCircleOuter: "#ff1493",
   needleCircleOuter: true,
   needleCircleInner: false,
-  animationDuration: 1500,
+  animationDuration: 250,
   animationRule: "linear"
 }).draw();
 
@@ -146,20 +145,20 @@ var gaugeTilt = new RadialGauge({
   width: 300,
   height: 300,
   units: "Degree (°)",
-  minValue: 0,
-  maxValue: 180,
+  minValue: -90,
+  maxValue: 90,
   colorValueBoxRect: "#049faa",
   colorValueBoxRectEnd: "#049faa",
   colorValueBoxBackground: "#f1fbfc",
   valueInt: 2,
   majorTicks: [
+      "-90",
+      "-60",
+      "-30",
       "0",
       "30",
       "60",
-      "90",
-      "120",
-      "150",
-      "180"
+      "90"
 
   ],
   minorTicks: 4,
@@ -187,7 +186,7 @@ var gaugeTilt = new RadialGauge({
   colorNeedleCircleOuter: "#ff1493",
   needleCircleOuter: true,
   needleCircleInner: false,
-  animationDuration: 1500,
+  animationDuration: 250,
   animationRule: "linear"
 }).draw();
 
