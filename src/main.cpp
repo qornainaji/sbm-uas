@@ -56,7 +56,7 @@ const int butright = 26;
 const int butleft = 27;
 
 int value = 0;
-int press = 90;
+int press = 0;
 
 DHTesp dhtSensor;
 
@@ -239,14 +239,14 @@ void loop() {
       Serial.println("left");
     }
 
-    if (press<0)
+    if (press<-90)
     {
-       press = 0;
+       press = -90;
     }
 
-    if (press>180)
+    if (press>90)
     {
-      press = 180;
+      press = 90;
     }
     Serial.println(press);
     events.send("ping",NULL,millis());
