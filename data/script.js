@@ -101,26 +101,26 @@ var gaugePot = new RadialGauge({
   renderTo: 'gauge-pot',
   width: 300,
   height: 300,
-  units: "Potentiometer (V)",
+  units: "Speedometer (m/s)",
   minValue: 0,
-  maxValue: 4095,
+  maxValue: 100,
   colorValueBoxRect: "#049faa",
   colorValueBoxRectEnd: "#049faa",
   colorValueBoxBackground: "#f1fbfc",
   majorTicks: [
       "0",
-      "1000",
-      "2000",
-      "3000",
-      "4095"
-
+      "20",
+      "40",
+      "60",
+      "80",
+      "100"
   ],
   minorTicks: 4,
   strokeTicks: true,
   highlights: [
       {
-          "from": 3000,
-          "to": 4095,
+          "from": 60,
+          "to": 100,
           "color": "#FFB6C1"
       }
   ],
