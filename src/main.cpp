@@ -2,15 +2,29 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <PubSubClient.h>
+
 #include "SPIFFS.h"
 #include <Arduino_JSON.h>
 #include "DHTesp.h"
+
+
+
+
 // #include <Adafruit_BME280.h>
 // #include <Adafruit_Sensor.h>
 
 // Replace with your network credentials
 const char* ssid = "Huawei";
 const char* password = "qornainaji";
+
+// Add your MQTT Broker IP address, example:
+//const char* mqtt_server = "192.168.1.144";
+const char* mqtt_server = "172.20.12.166";
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -60,8 +74,13 @@ String getSensorReadings(){
   readings["humidity"] =  String(data.humidity, 1);
   readings["potentiometer"] = String(value);
   readings["tiltmeter"] = String(press);
-  String jsonString = JSON.stringify(readings);
-  return jsonString;
+  return readings;
+}
+
+String converttoJson(){
+  readings = getSensorReadings()
+  String jsonString = JSON.stringify(readings)
+  return jsonString
 }
 
 // Initialize SPIFFS
@@ -93,6 +112,10 @@ void setup() {
   initWiFi();
   initSPIFFS();
 
+  // Init mqtt connection
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+
   // Web Server Root URL
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/index.html", "text/html");
@@ -102,7 +125,7 @@ void setup() {
 
   // Request for the latest sensor readings
   server.on("/readings", HTTP_GET, [](AsyncWebServerRequest *request){
-    String json = getSensorReadings();
+    String json = converttoJson();
     request->send(200, "application/json", json);
     json = String();
   });
@@ -121,7 +144,59 @@ void setup() {
   server.begin();
 }
 
+void callback(char* topic, byte* message, unsigned int length) {
+  Serial.print("Message arrived on topic: ");
+  Serial.print(topic);
+  Serial.print(". Message: ");
+  String messageTemp;
+  
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)message[i]);
+    messageTemp += (char)message[i];
+  }
+  Serial.println();
+
+  // Feel free to add more if statements to control more GPIOs with MQTT
+
+  // If a message is received on the topic esp32/output, you check if the message is either "on" or "off". 
+  // Changes the output state according to the message
+  if (String(topic) == "esp32/output") {
+    Serial.print("Changing output to ");
+    if(messageTemp == "on"){
+      Serial.println("on");
+      digitalWrite(ledPin, HIGH);
+    }
+    else if(messageTemp == "off"){
+      Serial.println("off");
+      digitalWrite(ledPin, LOW);
+    }
+  }
+}
+
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    // Attempt to connect
+    if (client.connect("ESP8266Client")) {
+      Serial.println("connected");
+      // Subscribe
+      client.subscribe("esp32/output");
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
 void loop() {
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
   if ((millis() - lastTime) > timerDelay) {
     // Send Events to the client with the Sensor Readings Every 1/2 seconds
     value = analogRead(potpin);
@@ -173,10 +248,38 @@ void loop() {
     {
       press = 180;
     }
-
     Serial.println(press);
     events.send("ping",NULL,millis());
-    events.send(getSensorReadings().c_str(),"new_readings" ,millis());
+
+    readings = getSensorReadings()
+    String jsonString = JSON.stringify(readings)
+
+    events.send(jsonString.c_str(),"new_readings" ,millis());
+
+
+    readings["temperature"] = String(data.temperature, 2);
+    readings["humidity"] =  String(data.humidity, 1);
+    readings["potentiometer"] = String(value);
+    readings["tiltmeter"] = String(press); 
+    
+
+    Serial.print("Temperature: ");
+    Serial.println(readings["temperature"]);
+    client.publish("esp32/temperature", readings["temperature"]);
+
+    Serial.print("Humidity: ");
+    Serial.println(readings["humidity"]);
+    client.publish("esp32/humidity", readings["humidity"]);
+
+    Serial.print("Potentiometer: ");
+    Serial.println(readings["potentiometer"]);
+    client.publish("esp32/potentiometer", readings["potentiometer"]);
+
+    Serial.print("Titlmeter: ");
+    Serial.println(readings["titlmeter"]);
+    client.publish("esp32/titlmeter", readings["titlmeter"]);
+
+
     lastTime = millis();
   }
 }
