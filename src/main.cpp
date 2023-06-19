@@ -17,11 +17,11 @@
 // #include <Adafruit_Sensor.h>
 
 // Replace with your network credentials
-const char* ssid = "LARELA272_ATAS";
-const char* password = "putra272";
+const char* ssid = "Huawei";
+const char* password = "qornainaji";
 
 // Add your MQTT Broker IP address, example:
-const char* mqtt_server = "192.168.20.13";
+const char* mqtt_server = "192.168.158.125";
 // const char* mqtt_server = "127.0.0.1";
 const int mqttPort = 1883;
 
@@ -264,7 +264,7 @@ void loop() {
     Serial.println(readings["tiltmeter"]);
     client.publish("esp32/tiltmeter", readings["tiltmeter"]);
 
-
+    Serial.println(WiFi.localIP());
     lastTime = millis();
   }
 }

@@ -101,7 +101,7 @@ var gaugePot = new RadialGauge({
   renderTo: 'gauge-pot',
   width: 300,
   height: 300,
-  units: "Speedometer (m/s)",
+  units: "Speedometer (km/h)",
   minValue: 0,
   maxValue: 100,
   colorValueBoxRect: "#049faa",
